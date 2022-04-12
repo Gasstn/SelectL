@@ -9,15 +9,15 @@ class SelectL{
 			this.#caracteristicas_variables();
 			
 
-			/*seteando opcion por defecto */
+			/*seteando meta aspectos por defecto */
 			if(this.#aspectos.placeholder != null)
 				/* colocando valor */
 				this.#html.querySelector('#selectl_barra #selectl_opcion_elegida #selectl_label_opcion_elegida').innerHTML = this.#aspectos.placeholder;
 			else{
-				var selectl_opciones = this.#html.querySelector('#selectl_opciones');
-				var opcion_defecto = selectl_opciones.querySelector('div:not(#searcher)');
+				let selectl_opciones = this.#html.querySelector('#selectl_opciones');
+				let opcion_defecto = selectl_opciones.querySelector('div:not(#searcher)');
 
-				var label_opcion_elegida_por_defecto = "", value_opcion_elegida_por_defecto = "";
+				let label_opcion_elegida_por_defecto = "", value_opcion_elegida_por_defecto = "";
 				if(opcion_defecto != null){
 					label_opcion_elegida_por_defecto = opcion_defecto.querySelector("#label_opcion").innerHTML;
 					value_opcion_elegida_por_defecto = opcion_defecto.dataset["value"];
@@ -52,6 +52,7 @@ class SelectL{
 		this.#push_opciones(opciones);
 	}
 	change_styleclass(clase){
+		this.#aspectos.styleclass = "selectl " + clase;
 		this.#html.classList = "selectl " + clase;
 	}
 	change_name(name){
@@ -59,6 +60,15 @@ class SelectL{
 		
 		this.#html.querySelector('#selectl_barra #selectl_opcion_elegida input[type="hidden"]').name = name;
 		this.#html.id = name;
+	}
+	change_placeholder(placeholder){
+		this.#aspectos.placeholder = placeholder;
+	}
+	change_dif_upper_lower_case(dif_upper_lower_case){
+		this.#aspectos.dif_upper_lower_case = dif_upper_lower_case;
+	}
+	change_dif_accent(dif_accent){
+		this.#aspectos.dif_accent = dif_accent;
 	}
 	change_searcher(searcher){
 		if(this.#html.querySelector("#selectl_opciones div#searcher") == null){
@@ -70,25 +80,26 @@ class SelectL{
 				input_searcher.type = "search";
 
 				/* codigo para searcher */
-				if(this.#aspectos.dif_upper_lower_case)
-					input_searcher.addEventListener("input", () => {
-						this.#html.querySelectorAll('#selectl_opciones > div:not(#searcher)').forEach(opcion => {
-							if(opcion.innerHTML.includes(input_searcher.value))
-								opcion.style.display = "block";
+				
+				input_searcher.addEventListener("input", () => {
+					this.#html.querySelectorAll('#selectl_opciones > div:not(#searcher)').forEach(opcion => {
+						let queda;
+						if(!this.#aspectos.dif_upper_lower_case)
+							if(!this.#aspectos.dif_accent)
+								queda = opcion.innerHTML.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(input_searcher.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase());
 							else
-								opcion.style.display = "none";
-						});
-					});
-				else
-					input_searcher.addEventListener("input", () => {
-						this.#html.querySelectorAll('#selectl_opciones > div:not(#searcher)').forEach(opcion => {
-							if(opcion.innerHTML.toLowerCase().includes(input_searcher.value.toLowerCase()))
-								opcion.style.display = "block";
+								queda = opcion.innerHTML.toLowerCase().includes(input_searcher.value.toLowerCase());
+						else
+							if(!this.#aspectos.dif_accent)
+								queda = opcion.innerHTML.normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(input_searcher.value.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
 							else
-								opcion.style.display = "none";
-						});
+								queda = opcion.innerHTML.includes(input_searcher.value);
+						if(queda)
+							opcion.style.display = "block";
+						else
+							opcion.style.display = "none";
 					});
-
+				});
 				div_searcher.appendChild(input_searcher);
 
 				this.#html.querySelector('#selectl_opciones').insertAdjacentElement("afterbegin", div_searcher);
@@ -219,7 +230,7 @@ class SelectL{
 		this.#html.appendChild(selectl_barra);
 
 		selectl_opciones.id = "selectl_opciones";
-		selectl_opciones.style.display = "none";	
+		selectl_opciones.style.display = "none";
 
 		this.#html.appendChild(selectl_opciones);
 	
@@ -241,5 +252,8 @@ class SelectL{
 
 			/* seteando opciones */
 		this.#push_opciones(this.#aspectos.opciones);
+
+		if(this.#aspectos.width != null)
+			this.#html.style.width = this.#aspectos.width;
 	}
 }
