@@ -1,0 +1,77 @@
+.selectl{
+	display: inline-block;
+	text-align: start;
+	background: transparent;
+	position: relative;
+}
+
+.selectl > #selectl_barra{
+	background: white;
+	height: 100%;
+}
+.selectl > #selectl_barra > *{
+	display: inline-block;
+}
+.selectl > #selectl_barra > #selectl_opcion_elegida{
+	margin: .1em .5em;
+}
+.selectl > #selectl_barra > #selectl_btn_desplegar_opciones{
+	padding: 0 .2em;
+	margin: .5em;
+	font-size: .6em;
+	font-weight: 600;
+	position: absolute;
+	right: 0;
+}
+
+.selectl > #selectl_opciones{
+	background: white;
+	padding: .1em 0;
+	margin-top: .1em;
+	position: absolute;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	max-height: 300px;
+	overflow-y: scroll;
+}
+.selectl > #selectl_opciones > div:not(#searcher){
+	padding: .1em .5em;
+	border-bottom: 1px solid black;
+}
+.selectl > #selectl_opciones > div:not(#searcher):hover{
+	background: #616d70;
+}
+.selectl > #selectl_opciones > div#searcher{
+	position: sticky;
+	top: 0;
+}
+
+div#searcher > input{
+	width: 100%;
+}
+
+@media screen and (max-width: 600px){
+	.selectl > #selectl_opciones > div:not(#searcher){
+		padding: .5em .5em;
+	}
+}
+
+/* estilo1 */
+.selectl.estilo1 > #selectl_opciones > div:not(#searcher) > #label_opcion,
+.selectl.estilo1 > #selectl_opciones > div:not(#searcher) > #metdat_opcion{
+	display: inline-block;
+}
+.selectl.estilo1 > #selectl_opciones > div#searcher{
+	z-index: 1;
+}
+.selectl.estilo1 > #selectl_opciones > div:not(#searcher) > #metdat_opcion{
+	position: absolute;
+	right: 0;
+}
+.selectl.estilo1 > #selectl_opciones > div:not(#searcher) > #subtit_opcion,
+.selectl.estilo1 > #selectl_opciones > div:not(#searcher) > #metdat_opcion{
+	font-size: .7em;
+	color: #616d70;
+}
+
